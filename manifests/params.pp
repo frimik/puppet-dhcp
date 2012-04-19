@@ -1,5 +1,9 @@
 class dhcp::params {
 
+  $conf_template = "${module_name}/dhcpd.conf.erb"
+  $host_template = "${module_name}/dhcpd.host.erb"
+  $pool_template = "${module_name}/dhcpd.pool.erb"
+
   case $operatingsystem {
     'debian': {
       $dhcp_dir    = "/etc/dhcp"

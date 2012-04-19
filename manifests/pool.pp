@@ -1,18 +1,25 @@
 define dhcp::pool (
-    $network,
-    $mask,
-    $range,
-    $gateway
-  ) {
+  $network,
+  $mask,
+  $range = undef,
+  $gateway,
+  $template = undef
+) {
 
-    include dhcp::params
+  include dhcp::params
 
-    $dhcp_dir = $dhcp::params::dhcp_dir
+  $dhcp_dir = $dhcp::dhcp_dir
 
-    concat::fragment {
-        "dhcp_pool_${name}":
-            target  => "${dhcp_dir}/dhcpd.pools",
-            content => template("dhcp/dhcpd.pool.erb");
-    }
+  if !$template {
+    $real_template = $dhcp::params::pool_template
+  } else {
+    $real_template = $template
+  }
+
+  concat::fragment { "dhcp_pool_${name}":
+    target  => "${dhcp_dir}/dhcpd.pools",
+    content => template($real_template);
+  }
+
 }
 
