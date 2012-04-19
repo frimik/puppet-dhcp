@@ -21,6 +21,11 @@ class dhcp::params {
       $packagename = "net/isc-dhcp42-server"
       $servicename = "isc-dhcpd"
     }
+    'centos', 'redhat', 'oel', 'scientific': {
+      $dhcp_dir    = "/etc/dhcp"
+      $packagename = "dhcp"
+      $servicename = "dhcpd"
+    }
   }
 
 }
