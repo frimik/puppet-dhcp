@@ -78,7 +78,5 @@ class dhcp (
       require   => Package[$packagename];
   }
 
-  include dhcp::monitor
-
 }
 
