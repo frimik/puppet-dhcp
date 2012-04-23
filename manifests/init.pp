@@ -163,7 +163,7 @@ class dhcp (
       }
     }
   } elsif $interfaces != undef and $interfaces != undef {
-    fail ("You cannot set both \$interface and \$interfaces.")
+    fail ("You cannot set both \$interface and \$interfaces at the same time.")
   } else {
     $dhcp_interfaces = $interfaces
   }
@@ -203,6 +203,7 @@ class dhcp (
   concat { "${dhcp_dir}/dhcpd.pools": }
 
   concat { "${dhcp_dir}/dhcpd.hosts": }
+
   concat::fragment { 'dhcp-hosts-header':
     target  => "${dhcp_dir}/dhcpd.hosts",
     content => "# static DHCP hosts\n",
