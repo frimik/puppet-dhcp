@@ -141,28 +141,31 @@ class dhcp (
   $packagename        = $dhcp::params::packagename,
   $servicename        = $dhcp::params::servicename,
   $dhcp_dir           = $dhcp::params::dhcp_dir,
-  $template           = undef
+  $template           = $dhcp::params::conf_template
 ) inherits dhcp::params {
 
-  # Incase people set interface instead of interfaces work around
-  # that. If they set both, use interfaces and the user is a unwise
-  # and deserves what they get.
+  include stdlib
+
+  # We are going to fail if both are set. interface expects scalar, interfaces
+  # expects an array but we're still going to be a bit tolerant here...
   if $interface != undef and $interfaces == undef {
-    $dhcp_interfaces = [ $interface ]
+    if (is_array($interface)) {
+      # if $interface is an array just copy it
+      $dhcp_interfaces = $interface
+    } else {
+      # if not make it an array when copying it
+      $dhcp_interfaces = [ $interface ]
+    }
   } elsif $interface == undef and $interfaces == undef {
     case $::operatingsystem {
       ubuntu, debian: {
         fail ("You need to set \$interfaces in $module_name")
       }
     }
+  } elsif $interfaces != undef and $interfaces != undef {
+    fail ("You cannot set both \$interface and \$interfaces.")
   } else {
     $dhcp_interfaces = $interfaces
-  }
-
-  if !$template {
-    $real_template = $dhcp::params::template
-  } else {
-    $real_template = $template
   }
 
   package { $packagename:
