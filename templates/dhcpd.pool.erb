@@ -13,5 +13,12 @@ subnet <%= network %> netmask <%= mask %> {
 
   option subnet-mask <%= mask %>;
   option routers <%= gateway %>;
+
+  <% if has_variable?("options") -%>
+    # custom options
+<% options.each do |opt| -%>
+    <%= opt %>;
+<% end -%>
+<% end -%>
 }
 
