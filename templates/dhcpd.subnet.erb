@@ -1,0 +1,49 @@
+#################################
+# <%= name %>
+#################################
+subnet <%= network %> netmask <%= netmask %> {
+
+  option subnet-mask <%= netmask %>;
+  option routers <%= gateway %>;
+
+<% if has_variable?("domain") and domain != :undef -%>
+  option domain-name <%= domain %>;
+<% end -%>
+
+<% if has_variable?("nameservers") and nameservers != :undef -%>
+  option domain-name-servers <%= nameservers.join(', ') %>;
+<% end -%>
+
+  # subnet parameters
+<% if has_variable?("parameters") and parameters != :undef -%>
+  <% parameters.each do |param| -%>
+    <%= param %>;
+  <% end -%>
+<% end -%>
+
+  # pools
+  <% if has_variable?("pools") and pools != :undef -%>
+    <% pools.each do |poolname, pool| -%>
+  # <%= pool %>
+  pool {
+
+      <%= if has_variable?(pool['nameservers']) -%>
+    option domain-name-servers <%= pool['nameservers'].join(', ') %>;
+      <% end -%>
+
+      <%= if has_variable?(pool['parameters']) -%>
+    <% pool['parameters'].each do |param| -%>
+    <%= param %>;
+    <% end -%>
+  <% end -%>
+
+  <%= if has_variable?(pool['ranges']) -%>
+    <% pool['ranges'].each do |r| -%>
+      range <%= r %>;
+    <% end -%>
+  <% end -%>
+
+  }
+<% end -%>
+
+}
