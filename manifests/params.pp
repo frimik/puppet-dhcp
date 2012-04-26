@@ -3,6 +3,7 @@ class dhcp::params {
   $conf_template = "${module_name}/dhcpd.conf.erb"
   $host_template = "${module_name}/dhcpd.host.erb"
   $pool_template = "${module_name}/dhcpd.pool.erb"
+  $subnet_template = "${module_name}/dhcpd.subnet.erb"
 
   case $operatingsystem {
     'debian': {
