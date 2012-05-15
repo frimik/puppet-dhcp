@@ -5,7 +5,6 @@ default-lease-time <%= default_lease_time %>;
 max-lease-time <%= max_lease_time %>;
 
 <% if has_variable?( dnsupdatekey ) and dnsupdatekey != :undef -%>
-ddns-updates on;
 ddns-update-style interim;
 update-static-leases on;
 use-host-decl-names on;
@@ -26,11 +25,10 @@ option domain-name "<%= dnsdomain.first %>";
 option domain-name-servers <%= nameservers.join( ', ') %>;
 option ntp-servers <%= ntpservers.join( ', ') %>;
 
-#allow booting;
-#allow bootp;
+option fqdn.no-client-update    on;  # client should not update its own A record.
+option fqdn.rcode2            255;   # http://tools.ietf.org/html/draft-ietf-dhc-fqdn-option-13 section 2.2
 
-option fqdn.no-client-update    on;  # set the "O" and "S" flag bits
-option fqdn.rcode2            255;
+# I have no idea if this is relevant.
 option pxegrub code 150 = text ;
 
 <% if has_variable?( 'pxeserver' ) and has_variable?( 'pxefilename' ) then -%>
